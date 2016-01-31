@@ -1,0 +1,24 @@
+: cascade "include/layout.tx"
+
+: override content -> {
+
+<h1 style="padding: 70px; text-align: center; font-size: 80px; line-height: 1; letter-spacing: -2px;">About Me</h1>
+   
+<hr />
+
+<style>
+    .marketing .row {
+        margin-top: 20px;
+    }
+</style>
+<div class="marketing">
+    <h1 style="text-align: center; font-size: 280%;">I'm <: $namae :></h1>
+    <h1 style="text-align: center; font-size: 200%;">Age <: $nenrei :></h1>
+    <h1 style="text-align: center; font-size: 200%;">Belong to <: $syozoku :></h1>
+    <h1 style="text-align: center; font-size: 200%;">Hobby : <: $syumi  :></h1>
+
+</div>
+
+    
+
+: }
