@@ -19,9 +19,29 @@
 </form>
 
 <hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>taitoru</th>
+            <th>nichiji</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
     : for $schedules -> $schedule {
-                <: $schedule.title :><br>
-                    : }
+        <tr>
+            <td><: $schedule.title :></td>
+            <td><: $schedule.date.strftime("%Y/%m/%d") :></td>
+            <td>
+                <form method="POST" action="<: uri_for('/schedules/'~$schedule.id~'/delete') :>">
+                    <button type="submit" class="btn btn-danger">delete</button>
+                </form>
+            </td>
+        </tr>
+    : }
+    </tbody>
+</table>
 
 
 : }

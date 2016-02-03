@@ -33,6 +33,14 @@ post '/post' =>sub {
             
     return $c->redirect('/');
  };    
+ 
+post '/schedules/:id/delete' => sub {
+    my ($c, $args) = @_;
+    my $id = $args->{id};
+ 
+    $c->db->delete('schedules' => { id => $id });
+    return $c->redirect('/');
+ };
 
 #get '/user' => sub{
 #    my ($c) = @_;
