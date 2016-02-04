@@ -30,15 +30,28 @@
     </thead>
     <tbody>
     : for $schedules -> $schedule {
-        <tr>
-            <td><: $schedule.title :></td>
-            <td><: $schedule.date.strftime("%Y/%m/%d") :></td>
-            <td>
-                <form method="POST" action="<: uri_for('/schedules/'~$schedule.id~'/delete') :>">
-                    <button type="submit" class="btn btn-danger">delete</button>
-                </form>
-            </td>
-        </tr>
+       : if ($schedule.date.strftime("%Y/%m/%d") == $kyou_epoch ){
+           <tr>
+               <td><: $schedule.title :></td>
+               <td><p style="color:red"><: $schedule.date.strftime("%Y/%m/%d") :></p></td>
+               <td>
+                   <form method="POST" action="<: uri_for('/schedules/'~$schedule.id~'/delete') :>">
+                       <button type="submit" class="btn btn-danger">delete</button>
+                   </form>
+               </td>
+           </tr>
+        : }
+        : else{
+           <tr>
+               <td><: $schedule.title :></td>
+               <td><: $schedule.date.strftime("%Y/%m/%d") :></td>
+               <td>
+                   <form method="POST" action="<: uri_for('/schedules/'~$schedule.id~'/delete') :>">
+                       <button type="submit" class="btn btn-danger">delete</button>
+                   </form>
+               </td>
+           </tr>
+        : }
     : }
     </tbody>
 </table>

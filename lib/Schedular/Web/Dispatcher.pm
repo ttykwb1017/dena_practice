@@ -10,7 +10,7 @@ use Time::Piece;
 # $i++ iをインクリメント
 get '/' => sub {
     my ($c) = @_;
-    my $order = $c->req->parameters->{order};
+    my $order = $c->req->parameters->{order} // "";
     my @schedules;
     if ($order eq 'reverse') {
         @schedules = $c->db->search('schedules', {}, { order_by => 'date ASC'});
@@ -19,9 +19,11 @@ get '/' => sub {
        @schedules = $c->db->search('schedules', {}, { order_by => 'date DESC'});
     }
 
-    print STDERR $order . "\n";
+    my $kyou_epoch_detail = localtime;
+    my $kyou_epoch = $kyou_epoch_detail->strftime('%Y/%m/%d');
+#    print STDERR $order . "\n";
   
-   return $c->render('index.tx', { schedules => \@schedules });
+   return $c->render('index.tx', { schedules => \@schedules ,kyou_epoch => $kyou_epoch} );
 };
 
 post '/post' =>sub {
@@ -29,8 +31,13 @@ post '/post' =>sub {
 
     my $title = $c->req->parameters->{title}; 
     my $date  = $c->req->parameters->{date};
-
     my $date_epoch = Time::Piece->strptime($date, '%Y/%m/%d')->epoch;
+
+    
+#    if ($date_epoch eq $kyou_epoch){
+#       $date_epoch = <p style ='color:red'>$date_epoch</p>;
+#    }
+
 
     $c->db->insert(schedules => { 
         title => $title,          
@@ -39,7 +46,7 @@ post '/post' =>sub {
             
     return $c->redirect('/');
  };    
- 
+      
 post '/schedules/:id/delete' => sub {
     my ($c, $args) = @_;
     my $id = $args->{id};
