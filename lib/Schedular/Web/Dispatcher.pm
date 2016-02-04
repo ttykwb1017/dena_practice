@@ -10,11 +10,17 @@ use Time::Piece;
 # $i++ iをインクリメント
 get '/' => sub {
     my ($c) = @_;
-    my @schedules = $c->db->search('schedules'); # (1)
-    for my $schedule (@schedules) {
-            print STDERR $schedule->title . "\n";
-                }
-   
+    my $order = $c->req->parameters->{order};
+    my @schedules;
+    if ($order eq 'reverse') {
+        @schedules = $c->db->search('schedules', {}, { order_by => 'date ASC'});
+      }
+    else{
+       @schedules = $c->db->search('schedules', {}, { order_by => 'date DESC'});
+    }
+
+    print STDERR $order . "\n";
+  
    return $c->render('index.tx', { schedules => \@schedules });
 };
 
