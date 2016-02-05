@@ -72,15 +72,17 @@ get '/accounts' => sub {
     my @accounts = $c->db->search('accounts', {}, { order_by => 'date DESC'});
     my @transform = ("Groceries", "Commodities", "Socializing costs", "Utility charges", "Others");
     my @watasu = ();
+    my $goukei = 0;
 
     for my $account (@accounts){
         my $hoge = $transform[$account->category - 1];
         my %hassyu = ("id" => $account->id, "content" => $account->content, "date" => $account->date, "money" => $account->money, "category" => $hoge);
         push(@watasu, \%hassyu);
+        $goukei += $account->money; 
     }
 
 
-    return $c->render('account.tx', {accounts => \@watasu} );
+    return $c->render('account.tx', {accounts => \@watasu , sum => $goukei} );
 };
 
 post '/accounts/:id/delete' => sub {
