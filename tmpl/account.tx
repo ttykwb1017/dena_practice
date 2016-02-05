@@ -1,0 +1,70 @@
+: cascade "include/layout.tx"
+
+: override content -> {
+<h1 style="padding: 30px; text-align: center; font-size:55px; line-height: 1; letter-spacing: -2px; ;color:blue">Keep Accounts</h1>
+<hr />
+ 
+ <style>
+   .marketing .row {
+   margin-top: 20px;
+    }
+
+</style>
+
+
+<form method="POST" action="<: uri_for('/accounts/post') :>">                                                  
+<!--<form class="form-inline" method="POST" action="<: uri_for('/accounts') :>">-->                                                  
+<div class="form-group">
+<label>Date</label>
+<input type="text" class="form-control" name="date" placeholder="ex: 2015/03/10">
+</div>
+
+<label>Category</label>
+<select name="category">
+<option value=1>Groceries</option>
+<option value=2>Commodities</option>
+<option value=3>Socializing costs</option>
+<option value=4>Utility charges</option>
+<option value=5>Others</option>
+</select>
+
+<br>
+<div class="form-group">
+<label>Content</label>
+<input type="text" class="form-control" name="content" placeholder="ex: lunch" >
+</div>
+
+<div class="form-group">
+<label>Money</label>
+<input type="number" class="form-control" name="money" placeholder="ex: 30000" >
+</div>
+
+<button type="submit" class="btn btn-default">register</button>
+
+</form>
+<hr />                                                                                             
+                                    
+<table class="account_table" align = center>
+    <thead>
+        <tr>
+            <th width="150">date</th>
+            <th width="150">category</th>
+            <th width="150">contents</th>
+            <th width="150">money</th>
+        </tr>
+    </thead>
+    <tbody>
+    : for $accounts -> $account {
+        <tr>
+            <td width="150" height = "50"><: $account.date.strftime("%Y/%m/%d") :></td>
+            <td width="150" height = "50"><: $account.category :></td>
+            <td width="150" height = "50"><: $account.content :></td>
+            <td width="150" height = "50"><: $account.money :></td>
+            <td width="150" height = "40">
+                <form method="POST" action="<: uri_for('/accounts/'~$account.id~'/delete') :>"    >
+                <button type="submit" class="btn btn-danger">delete</button>
+                </form>
+            </td>
+        </tr>
+    :  }
+: }

@@ -18,5 +18,14 @@ table {
         Time::Piece->strptime($col_value, '%s');
     }
 };
+table {
+    name 'accounts';
+    pk 'id';
+    columns qw(id content date money category);
 
+    inflate 'date' => sub{
+        my $col_value = shift;
+        Time::Piece->strptime($col_value, '%s');
+    }
+};
 1;

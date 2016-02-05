@@ -33,12 +33,6 @@ post '/post' =>sub {
     my $date  = $c->req->parameters->{date};
     my $date_epoch = Time::Piece->strptime($date, '%Y/%m/%d')->epoch;
 
-    
-#    if ($date_epoch eq $kyou_epoch){
-#       $date_epoch = <p style ='color:red'>$date_epoch</p>;
-#    }
-
-
     $c->db->insert(schedules => { 
         title => $title,          
         date  => $date_epoch,     
@@ -55,21 +49,46 @@ post '/schedules/:id/delete' => sub {
     return $c->redirect('/');
  };
 
-#get '/user' => sub{
-#    my ($c) = @_;
-#    my $namae = "Tetsuya Kawabe";
-#    my $nenrei = "23";
-#    my $syozoku = "Mech. Eng. Osaka Univ.";
-#    my $syumi = "cycling, watching tennis games";
-#
-#    return $c->render('user.tx', {
-#        namae => $namae,
-#        nenrei => $nenrei,
-#        syozoku => $syozoku,
-#        syumi => $syumi,
-#    });
+post '/accounts/post' => sub{ 
+    my ($c) = @_;
+    my $content = $c->req->parameters->{content}; 
+    my $date  = $c->req->parameters->{date};
+    my $category = $c->req->parameters->{category}; 
+    my $money  = $c->req->parameters->{money};
+    my $date_epoch = Time::Piece->strptime($date, '%Y/%m/%d')->epoch;
+
+    $c->db->insert(accounts => { 
+        content => $content,          
+        date  => $date_epoch,
+        category => $category,
+        money => $money,
+    });                           
+            
+    return $c->redirect('/accounts');
+};
+
+get '/accounts' => sub {
+    my ($c) = @_;
+    my @accounts = $c->db->search('accounts', {}, { order_by => 'date DESC'});
+    my @transform = ("Groceries", "Commodities", "Socializing costs", "Utility charges", "Others");
+    my @watasu = ();
+
+    for my $account (@accounts){
+        my $hoge = $transform[$account->category - 1];
+        my %hassyu = ("id" => $account->id, "content" => $account->content, "date" => $account->date, "money" => $account->money, "category" => $hoge);
+        push(@watasu, \%hassyu);
+    }
+
+
+    return $c->render('account.tx', {accounts => \@watasu} );
+};
+
+post '/accounts/:id/delete' => sub {
+    my ($c, $args) = @_;
+    my $id = $args->{id};
  
- 
-#};
+    $c->db->delete('accounts' => { id => $id });
+    return $c->redirect('/accounts');
+ };
 
 1;
